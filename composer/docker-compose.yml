@@ -1,0 +1,66 @@
+version: "3"
+services:
+  app:
+    build:
+      dockerfile: ../images/magento/Dockerfile
+    image: dev-magento
+    ports:
+      - "443:8443"      
+    env_file: env/env.magento
+    volumes:
+      - ~/.composer:/var/www/.composer:cached
+      - ./appdata:/var/www/html
+      - ssldata:/etc/nginx/certs
+
+  db:
+    image: mariadb:10.4
+    command:
+      --max_allowed_packet=64M
+      --optimizer_use_condition_selectivity=1
+      --optimizer_switch="rowid_filter=off"
+    ports:
+      - "3306:3306"
+    env_file: env/env.composer
+    volumes:
+      - dbdata:/var/lib/mysql
+
+  redis:
+    image: redis:6.2-alpine
+    ports:
+      - "6379:6379"
+
+  elasticsearch:
+    image: markoshust/magento-elasticsearch:7.16-0
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      - "discovery.type=single-node"
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+      - "cluster.routing.allocation.disk.threshold_enabled=false"
+      - "index.blocks.read_only_allow_delete"
+
+  phpmyadmin:
+    image: docker.io/bitnami/phpmyadmin:5
+    ports:
+      - '80:8080'
+    environment:
+      - DATABASE_HOST=db
+    depends_on:
+      - db
+
+  mailcatcher:
+    image: sj26/mailcatcher
+    ports:
+      - "1080:1080"
+
+  blackfire:
+   image: blackfire/blackfire:2
+   ports:
+     - "8307"
+   env_file: env/env.blackfire
+
+volumes:
+  appdata:
+  dbdata:
+  ssldata:

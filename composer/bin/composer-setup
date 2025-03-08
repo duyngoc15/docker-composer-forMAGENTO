@@ -1,0 +1,7 @@
+#!/bin/bash
+
+[ -z "$1" ] && echo "Please specify version of magento for composer setup" && exit
+
+docker compose up -d
+bin/cli composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition:$1 /var/www/html
+ 

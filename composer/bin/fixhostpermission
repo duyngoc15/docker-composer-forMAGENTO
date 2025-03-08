@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -x
+userID='1001'
+
+if [ 'sed -n "/^$userID/p" /etc/passw' ]
+then
+    echo "User [$userID] already exists"
+    sudo chown -R 1001 appdata
+else
+    echo "User [$userID] doesn't exist"
+fi
