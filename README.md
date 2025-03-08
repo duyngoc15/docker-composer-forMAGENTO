@@ -30,5 +30,3 @@ Then you can access magento via web browser: https://magento.test and admin page
 - **bin/mysql < file.sql** (import db, you have to correct permission first - **sed 's/\sDEFINER=`[^`]*`@`[^`]*`//g' -i file.sql**)
 - **bin/setup**
 Then you can access magento via web browser: https://magento.test and admin page is in the output of bin/setup.
-
-IF ANY ISSUE, PLEASE CONTACT TO DEVOPS TEAM (slack - **Long Tran**)
